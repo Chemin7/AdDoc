@@ -4,7 +4,7 @@ const app = express();
 const PORT = 3000;
 const citasRouter = require('./routes/citas')
 app.get('/',(req,res)=>{
-    res.render('index.ejs')
+    res.render('login.ejs')
 })
 
 app.use('/citas',citasRouter);
