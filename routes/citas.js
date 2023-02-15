@@ -14,4 +14,4 @@ router.post('/',(req,res,next)=>{
     res.render('',{nombre:nombre_paciente, email:email_paciente,telefono:telefono_paciente});
 });
 
-modoule.exports = router;
+module.exports = router;
