@@ -6,15 +6,18 @@ const app = express();
 const PORT = 3000;
 
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(express.static(path.join(__dirname, 'public')));
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
+
+//Telling the express module that public dir has all of our site assets
+app.use(express.static(path.join(__dirname, '/public')));
 
 const citasRouter = require('./routes/citas')
 
 app.get('/',(req,res)=>{
-    //res.render('login.ejs')
-    res.render('citas');
+    res.render('../views/index.ejs')
+
 })
 
 app.use('/citas',citasRouter);
