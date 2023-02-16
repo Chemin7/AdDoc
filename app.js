@@ -16,11 +16,14 @@ app.use(express.static(path.join(__dirname, '/public')));
 const citasRouter = require('./routes/citas')
 
 app.get('/',(req,res)=>{
-    res.render('../views/index.ejs')
+    res.render('../views/citas.ejs')
 
 })
+app.get('/citas',(req,res)=>{
+    res.render('../views/citas.ejs')
 
-app.use('/citas',citasRouter);
+})
+//app.use('/citas',citasRouter);
 
 app.listen(PORT);
 
