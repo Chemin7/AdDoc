@@ -20,18 +20,8 @@ app.use(bodyParser.json());
 
 const citasRouter = require('./routes/citas')
 
-app.get('/',(req,res)=>{
-<<<<<<< HEAD
-    res.render('../views/index.ejs')
-=======
-    res.render('../views/citas.ejs')
+app.use('/citas',citasRouter)
 
->>>>>>> d2b80bbbea2ce8b2d48ae9a7ede89dbd8c52031b
-})
-app.get('/citas',(req,res)=>{
-    res.render('../views/citas.ejs')
-
-})
 //app.use('/citas',citasRouter);
 
 app.listen(PORT);
