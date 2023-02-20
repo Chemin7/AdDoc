@@ -17,22 +17,14 @@ app.use(express.static(path.join(__dirname, '/public')));
 const bodyParser = require('body-parser')
 app.use(bodyParser.json());
 
+app.use(bodyParser.urlencoded({extended: false}));
+
 
 const citasRouter = require('./routes/citas')
+app.use('/citas',citasRouter)
 
-app.get('/',(req,res)=>{
-<<<<<<< HEAD
-    res.render('../views/index.ejs')
-=======
-    res.render('../views/citas.ejs')
-
->>>>>>> d2b80bbbea2ce8b2d48ae9a7ede89dbd8c52031b
-})
-app.get('/citas',(req,res)=>{
-    res.render('../views/citas.ejs')
-
-})
-//app.use('/citas',citasRouter);
+const pruebaRouter = require('./routes/prueba')
+app.use('/prueba',pruebaRouter)
 
 app.listen(PORT);
 
