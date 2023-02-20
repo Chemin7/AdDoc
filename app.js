@@ -22,6 +22,8 @@ const citasRouter = require('./routes/citas')
 
 app.use('/citas',citasRouter)
 
+
+
 //app.use('/citas',citasRouter);
 
 app.listen(PORT);
