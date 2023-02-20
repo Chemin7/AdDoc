@@ -1,17 +1,12 @@
-const express = require('express');
+const citasRouter = require('express').Router();
 
-const router = express.Router();
+module.exports = citasRouter;
 
-router.get('/',(req,res)=>{
-    res.render('citas');
+citasRouter.get('/',(req,res)=>{
+    res.render('index');
 })
-/*
-router.post('/',(req,res,next)=>{
-    const nombre_paciente = req.params.nombre;
-    const email_paciente = req.parms.email;
-    const telefono_paciente = req.params.paciente;
 
-    //res.render('',{nombre:nombre_paciente, email:email_paciente,telefono:telefono_paciente});
-});*/
-
-module.exports = router;
+citasRouter.post('/',(req,res)=>{
+    console.log(req.body)
+    res.send(req.body)
+})

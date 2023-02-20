@@ -1,23 +1,27 @@
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
+
 
 const app = express();
-const PORT = 3000;
 
-app.use(bodyParser.urlencoded({extended: false}));
+const PORT = process.env.PORT || 4001;
 
+//Setting the default engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 //Telling the express module that public dir has all of our site assets
 app.use(express.static(path.join(__dirname, '/public')));
 
+// Add middware for parsing request bodies here:
+const bodyParser = require('body-parser')
+app.use(bodyParser.json());
+
+
 const citasRouter = require('./routes/citas')
 
 app.get('/',(req,res)=>{
     res.render('../views/index.ejs')
-
 })
 
 app.use('/citas',citasRouter);
