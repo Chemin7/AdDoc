@@ -1,10 +1,9 @@
 //Campos del formulario
-const mascotaInput = document.querySelector('#mascota');
-const propietarioInput = document.querySelector('#propietario');
+const pacienteInput = document.querySelector('#paciente');
 const telefonoInput = document.querySelector('#telefono');
 const fechaInput = document.querySelector('#fecha');
 const horaInput = document.querySelector('#hora');
-const sintomasInput = document.querySelector('#sintomas');
+
 
 //UI
 const formulario = document.querySelector('#nueva-cita');
@@ -29,49 +28,44 @@ class Citas{
 }
 
 class UI{
-    imprimirAlerta(msj,tipo){
-        //Crear el div
-        const divMensaje = document.createElement('DIV');
-        divMensaje.classList.add('text-center', 'alert', 'd-block','col-12');
-
-        //Agregar clase en base al tipo de error
-        if(tipo === 'error'){
-            divMensaje.classList.add('alert-danger');
-        }else{
-            divMensaje.classList.add('alert-success');
+    imprimirAlerta(mensaje,tipo){
+        // Crea el div
+        const divMensaje = document.createElement('div');
+        divMensaje.classList.add('text-center', 'alert', 'd-block', 'col-12');
+        
+        // Si es de tipo error agrega una clase
+        if(tipo === 'error') {
+             divMensaje.classList.add('alert-danger');
+        } else {
+             divMensaje.classList.add('alert-success');
         }
 
-        //Mensaje de erro
-        divMensaje.textContent = msj;
+        // Mensaje de error
+        divMensaje.textContent = mensaje;
 
-        //Agregar al DOM
-        
-        document.querySelector('#contenido').insertBefore(divMensaje,document.querySelector('.agregar-cita'));
+        // Insertar en el DOM
+        document.querySelector('#contenido').insertBefore( divMensaje , document.querySelector('.agregar-cita'));
 
-        //Quitar la alerta
-        setTimeout(()=>{
+        // Quitar el alert despues de 3 segundos
+        setTimeout( () => {
             divMensaje.remove();
-        },3000)
+        }, 3000);
     }
 
     imprimirCitas({citas}){
         this.limpiarHTML();
         citas.forEach(cita=>{
-            const {mascota,propietario,telefono,fecha,hora,sintomas,id} = cita;
+            const {paciente,telefono,fecha,hora,id} = cita;
 
             const divCita = document.createElement('DIV');
             divCita.classList.add('cita','p-3');
             divCita.dataset.id = id; //Atributo personalizado
             
             //Scripting de los atributos de la cita
-            const mascotaParrafo = document.createElement('h2');
-            mascotaParrafo.classList.add('card-title','font-weight-bolder');
-            mascotaParrafo.textContent = mascota;
+            const pacienteParrafo = document.createElement('h2');
+            pacienteParrafo.classList.add('card-title','font-weight-bolder');
+            pacienteParrafo.textContent = paciente;
 
-            const propietarioParrafo = document.createElement('p');
-            propietarioParrafo.innerHTML = `
-                <span class = "font-weight-bolder">Propietario: </span> ${propietario}
-            `
             const telefonoParrafo = document.createElement('p');
             telefonoParrafo.innerHTML = `
                 <span class = "font-weight-bolder">Telefono: </span> ${telefono}
@@ -83,10 +77,6 @@ class UI{
             const horaParrafo = document.createElement('p');
             horaParrafo.innerHTML = `
                 <span class = "font-weight-bolder">Hora: </span> ${hora}
-            `
-            const sintomasParrafo = document.createElement('p');
-            sintomasParrafo.innerHTML = `
-                <span class = "font-weight-bolder">Sintomas: </span> ${sintomas}
             `
 
             //Boton para eliminar cita
@@ -103,12 +93,10 @@ class UI{
             btnEditar.onclick = ()=>cargarEdicion(cita);
 
             //Agregar los parrafos al divCita
-            divCita.appendChild(mascotaParrafo);
-            divCita.appendChild(propietarioParrafo);
+            divCita.appendChild(pacienteParrafo);
             divCita.appendChild(telefonoParrafo);
             divCita.appendChild(fechaParrafo);
             divCita.appendChild(horaParrafo);
-            divCita.appendChild(sintomasParrafo);
             divCita.appendChild(btnEliminar)
             divCita.appendChild(btnEditar)
 
@@ -129,24 +117,20 @@ const administrarCitas = new Citas();
 //Registrar eventos
 eventListeners()
 function eventListeners(){
-    mascotaInput.addEventListener('input',datosCita);
-    propietarioInput.addEventListener('input',datosCita);
+    pacienteInput.addEventListener('input',datosCita);
     telefonoInput.addEventListener('input',datosCita);
     fechaInput.addEventListener('input',datosCita);
     horaInput.addEventListener('input',datosCita);
-    sintomasInput.addEventListener('input',datosCita);
 
     formulario.addEventListener('submit',nuevaCita);
 }
 
 //Objeto con la informacion de la cita
 const citaObj = {
-    mascota: '',
-    propietario: '',
+    paciente: '',
     telefono: '',
     fecha: '',
     hora: '',
-    sintomas: ''
 }
 
 //Agrega datos al objeto de cita
@@ -156,60 +140,59 @@ function datosCita(e){
 }
 
 //Valida y agrega una nueva cita a la clase de citas
-function nuevaCita(e){
+function nuevaCita(e) {
     e.preventDefault();
 
-    //Extraer informacion del objeto de citas
-    const {mascota,propietario,telefono,fecha,hora,sintomas} = citaObj;
+    const {paciente, telefono, fecha, hora } = citaObj;
 
-    //Validar
-    if(mascota === '' || propietario === '' || telefono === '' || fecha ==='' || hora ==='' || sintomas === ''){
-        ui.imprimirAlerta('Todos los campos son obligatorios', 'error')
+    // Validar
+    if( paciente === '' || telefono === '' || fecha === ''  || hora === '' ) {
+        ui.imprimirAlerta('Todos los mensajes son Obligatorios', 'error')
+
         return;
-    }if(editando){
-        ui.imprimirAlerta('Editado correctamente');
+    }
 
-        //Pasar el objeto de la cita a edicion
-        administrarCitas.editarCita({...citaObj});
+    if(editando) {
+        // Estamos editando
+        administrarCitas.editarCita( {...citaObj} );
 
+        ui.imprimirAlerta('Guardado Correctamente');
 
-        //Regresar el texto del boton a su estado original
-        formulario.querySelector('button[type = "submit"]').textContent = 'Crear cita';
+        formulario.querySelector('button[type="submit"]').textContent = 'Crear Cita';
 
-        //Quitar modo edicion
         editando = false;
-    }else{
-        //Generar un ID unico
-        citaObj.id = Date.now();
 
-        //Creando una nueva cita
-        administrarCitas.agregarCita({...citaObj}) //Le mandamos una copia nada mas y no el objeto global, para evitar que se sobreescriba la misma informacion
-        //Mensaje de agregado correctament
-        ui.imprimirAlerta('Cita agregada correctamente');
+    } else {
+        // Nuevo Registrando
+
+        // Generar un ID único
+        citaObj.id = Date.now();
+        
+        // Añade la nueva cita
+        administrarCitas.agregarCita({...citaObj});
+
+        // Mostrar mensaje de que todo esta bien...
+        ui.imprimirAlerta('Se agregó correctamente')
     }
 
 
-
-
-    //Reiniciar el objeto para la validacion
-    reiniciarObj();
-
-    //Reiniciar el formulario
-    formulario.reset();
-
-    //Mostrar el HTML de las citas
+    // Imprimir el HTML de citas
     ui.imprimirCitas(administrarCitas);
 
+    // Reinicia el objeto para evitar futuros problemas de validación
+    reiniciarObjeto();
+
+    // Reiniciar Formulario
+    formulario.reset();
 
 }
 
+
 function reiniciarObj(){
-    citaObj.mascota = '';
-    citaObj.propietario = '';
+    citaObj.paciente = '';
     citaObj.telefono = '';
     citaObj.fecha = '';
     citaObj.hora = '';
-    citaObj.sintomas = '';
 
 }
 
@@ -223,23 +206,20 @@ function eliminarCita(id){
 }
 //Carga los datos y el modo edicion
 function cargarEdicion(cita){
-    const {mascota,propietario,telefono,fecha,hora,sintomas,id} = cita;
+    const {paciente,telefono,fecha,hora,id} = cita;
 
     //Llenar los inputs
-    mascotaInput.value = mascota;
-    propietarioInput.value = propietario;
+    pacienteInput.value = paciente;
     telefonoInput.value = telefono;
     fechaInput.value = fecha;
     horaInput.value = hora;
-    sintomasInput.value = sintomas;
+
 
     //Llenar el objeto
-    citaObj.mascota = mascota;
-    citaObj.propietario = propietario;
+    citaObj.paciente = paciente;
     citaObj.telefono = telefono;
     citaObj.fecha = fecha;
     citaObj.hora = hora;
-    citaObj.sintomas = sintomas ;
     citaObj.id = id;
 
     //Cambiar el texto del boton
