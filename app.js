@@ -16,6 +16,8 @@ app.use(express.static(path.join(__dirname, '/public')));
 // Add middware for parsing request bodies here:
 const bodyParser = require('body-parser')
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 
 
 const citasRouter = require('./routes/citas')

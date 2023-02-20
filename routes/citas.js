@@ -7,6 +7,6 @@ citasRouter.get('/',(req,res)=>{
 })
 
 citasRouter.post('/',(req,res)=>{
-    console.log(JSON.stringify(req.body));
+    //console.log(JSON.stringify(req.body));
     res.send(JSON.stringify(req.body))
 })

@@ -1,4 +1,4 @@
-const Cita = require('../models/cita');
+/*const Cita = require('../models/cita');
 
 exports.getAddCita = (req,res,next)=>{
     res.render('index.ejs')
@@ -11,4 +11,4 @@ exports.postAddCita = (req,res,next)=>{
     const cita = new Cita(fecha,nombre,telefono);
     cita.save();
     res.redirect('/');
-}
+}*/
