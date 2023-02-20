@@ -1,10 +1,12 @@
 const citas = [];
-
+const Paciente = require('./paciente');
+let Person  = require('./paciente')
 module.exports = class Citas{
-    constructor(fecha,nombre,telefono){
+    constructor(fecha,hora,paciente){
+
         this.fecha = fecha;
-        this.nombre = nombre;
-        this.telefono = telefono;
+        this.hora = hora;
+        this.paciente = paciente;
     }
 
     save(){
