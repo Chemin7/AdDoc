@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Doctor {
+  id        String      @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  specialty String
+  confirmed Boolean  @default(false)
+  patients Patient[]
+}
+
+model Patient {
+  id          String      @id @default(uuid())
+  name        String
+  email       String @unique
+  age         Int
+  gender      String
+  address     String
+  phoneNumber String
+  religion    String
+  deleted     Boolean @default(false)
+  doctorId    String
+  Doctor      Doctor @relation(fields: [doctorId], references: [id])
+  symptoms    PatientOnSymptom[]
+}
+
+model Symptom {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  patients    PatientOnSymptom[]
+}
+
+model PatientOnSymptom {
+  patientId String
+  symptomId String
+  Patient   Patient @relation(fields: [patientId], references: [id])
+  Symptom   Symptom @relation(fields: [symptomId], references: [id])
+  @@id([patientId, symptomId])
+}
