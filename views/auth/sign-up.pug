@@ -4,15 +4,16 @@ block contenido
         h1.text-4xl.my-10.text-center.font-extrabold Ad
             span.text-blue-600 Doc
         h2.text-center.text-2xl.font-extrabold Create your account
-        //-if errors
+        if errors
             div(class="max-w-md mx-auto my-10")
                 each error in errors
                     p(class="bg-red-600 text-white uppercase text-xs text-center p-2 mb-1 font-bold rounded-lg")= error.msg
+        
 
 
         .mt-8.mx-auto.max-w-md
             .bg-white.py-8.px-4.shadow
-                form(action="/signup" class="space-y-5" method="POST")
+                form(action="/sign-up" class="space-y-5" method="POST")
                     
                     div 
                         label.block.text-sm.uppercase.text-gray-500.mb-2.font-bold(for="name") Your Name

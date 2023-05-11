@@ -4,7 +4,11 @@ const flash = require('express-flash');
 const passport = require('passport');
 const passportConfig = require('./config/passport');
 const authRoutes = require('./routes/authRoutes');
+const doctorRoutes= require('./routes/doctorRoutes')
 const app = express();
+
+
+
 const PORT = process.env.PORT || 3000;
 
 require('dotenv').config();
@@ -14,17 +18,23 @@ require('dotenv').config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: "secret",
   resave: false,
   saveUninitialized: false
 }));
+
 app.use(flash());
+app.use((req, res, next) => {
+  res.locals.error = req.flash('error');
+  res.locals.errors = req.flash('errors');
+  res.locals.success = req.flash('success');
+  next();
+});
 
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
-passportConfig(passport);
-
+passportConfig(passport)
 // Set view engine
 app.set('view engine', 'pug');
 app.set('views','./views');
@@ -36,6 +46,8 @@ app.get('/',(req,res)=>{
     res.send("hola mundo")
 })
 app.use('/', authRoutes);
+
+app.use('/doctors',doctorRoutes);
 
 // Catch 404 and forward to error handler
 /*app.use(function(req, res, next) {

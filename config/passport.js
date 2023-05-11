@@ -1,20 +1,43 @@
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
+const LocalStrategy = require('passport-local').Strategy;
 const { PrismaClient } = require('@prisma/client');
+const bcrypt = require('bcrypt');
 const prisma = new PrismaClient();
 
 module.exports = function(passport) {
-  let opts = {};
-  opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-  opts.secretOrKey = process.env.SECRET_KEY;
-  
-  passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
-    let doctor = await prisma.doctor.findUnique({ where: { id: jwt_payload.id } });
-    if (doctor) {
-      return done(null, doctor);
-    } else {
-      return done(null, false);
-    }
-  }));
-};
+  passport.use("local",
+    new LocalStrategy({ usernameField: 'email', passReqToCallback: true }, async (req,email, password, done) => {
+      // Match doctor
+      try{
+      let doctor = await prisma.doctor.findUnique({ where: { email: email } });
+      
+      if (!doctor) {
+        return done(null, false, req.flash('error', 'Email no registrado'));
+      }
 
+      const isValidPassword = await bcrypt.compare(password, doctor.password);
+
+      if (!isValidPassword) {
+        return done(null, false, req.flash('error', 'Incorrect password'));
+      }
+
+      if(!doctor.isConfirmed){
+        return done(null, false, req.flash('error', 'Account not verified'));
+      }
+
+      return done(null, doctor);
+    }catch(err){
+      console.log(err)
+      return done(error);
+    }
+    })
+  );
+
+  passport.serializeUser((doctor, done) => {
+    done(null, doctor.id);
+  });
+
+  passport.deserializeUser(async (id, done) => {
+    let doctor = await prisma.doctor.findUnique({ where: { id: id } });
+    done(null, doctor);
+  });
+};

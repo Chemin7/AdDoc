@@ -16,7 +16,8 @@ model Doctor {
   password  String
   name      String
   specialty String
-  confirmed Boolean  @default(false)
+  confirmationToken String?  @unique
+  isConfirmed Boolean @default(false)
   patients Patient[]
 }
 

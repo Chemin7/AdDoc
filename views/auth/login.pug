@@ -8,6 +8,11 @@ block contenido
             div(class="max-w-md mx-auto my-10")
                 each error in errors
                     p(class="bg-red-600 text-white uppercase text-xs text-center p-2 mb-1 font-bold rounded-lg")= error.msg
+        if error.length > 0
+            div(class="max-w-md mx-auto my-10")
+                p(class="bg-red-600 text-white uppercase text-xs text-center p-2 mb-1 font-bold rounded-lg")= error
+
+
         .mt-8.mx-auto.max-w-md
             .bg-white.py-8.px-4.shadow
                 form(action="/login" class="space-y-5" method="POST")
