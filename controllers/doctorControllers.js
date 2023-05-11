@@ -28,6 +28,19 @@ exports.getEditPatientPage = async (req,res) =>{
   
 }
 
+
+exports.getGenerateRecipePage = async (req,res)=>{
+  try{
+    const symptoms = await prisma.symptom.findMany()
+    const patient = await prisma.patient.findUnique(
+      {
+        where:{id:req.params.id}
+      })
+    res.render('doctor/recipe',{symptoms,patient})
+  }catch(err){
+    console.log(err);
+  }
+}
 //API
 exports.registerPatient = async (req, res) => {
   const { name, email, age, gender, address, phoneNumber, religion } = req.body;

@@ -45,10 +45,6 @@ block contenido
                                 option(value="Buddhism") Buddhism 
                                 option(value="Islam") Islam 
                                 option(value="Other") Other 
-                        //-div
-                            label.block.text-sm.uppercase.text-gray-500.mb-2.font-bold(for="symptoms") Symptoms:
-                            select#symptoms.w-full.px-3.py-2.border.border-blue-700.rounded-md(placeholder="Choose the patient symptoms:" name="symptoms")
-                                each symptom in symptoms
-                                    option(value=symptom.id)= symptom.name
+
                        
                         input#submit(type="submit" value="Edit Patient" class="w-full bg-blue-600 hover:bg-blue-700 py-3 text-white font-bold rounded-lg cursor-pointer ")

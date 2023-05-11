@@ -7,7 +7,7 @@ const doctorRouter = express.Router();
 //Render
 doctorRouter.get('/dashboard', isAuth, doctorController.getDashboardPage);
 doctorRouter.get('/edit-patient/:id', isAuth, doctorController.getEditPatientPage);
-
+doctorRouter.get('/recipe/:id',isAuth, doctorController.getGenerateRecipePage)
 //API
 doctorRouter.post('/edit-patient/:id', isAuth, patientRegisterValidator, doctorController.editPatient);
 doctorRouter.post('/register-patient', isAuth,patientRegisterValidator, doctorController.registerPatient);
