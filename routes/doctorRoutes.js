@@ -9,8 +9,8 @@ doctorRouter.get('/dashboard', isAuth, doctorController.getDashboardPage);
 doctorRouter.get('/edit-patient/:id', isAuth, doctorController.getEditPatientPage);
 
 //API
-doctorRouter.post('/edit-patient/:id', isAuth, doctorController.editPatient);
+doctorRouter.post('/edit-patient/:id', isAuth, patientRegisterValidator, doctorController.editPatient);
 doctorRouter.post('/register-patient', isAuth,patientRegisterValidator, doctorController.registerPatient);
-//doctorRouter.post('/patient/:id', doctorController.softDeletePatient);
+doctorRouter.delete('/delete-patient/:id', doctorController.softDeletePatient);
 
 module.exports = doctorRouter;

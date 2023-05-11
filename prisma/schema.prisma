@@ -22,31 +22,39 @@ model Doctor {
 }
 
 model Patient {
-  id          String      @id @default(uuid())
-  name        String
-  email       String @unique
-  age         Int
-  gender      String
-  address     String
-  phoneNumber String
-  religion    String
-  deleted     Boolean @default(false)
-  doctorId    String
-  Doctor      Doctor @relation(fields: [doctorId], references: [id])
-  symptoms    PatientOnSymptom[]
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  age           Int
+  gender        String
+  address       String
+  phoneNumber   String
+  religion      String
+  deleted       Boolean        @default(false)
+  doctorId      String
+  Doctor        Doctor         @relation(fields: [doctorId], references: [id])
+  progressNotes ProgressNote[]
 }
 
 model Symptom {
-  id          String   @id @default(uuid())
-  name        String
-  description String
-  patients    PatientOnSymptom[]
+  id            String          @id @default(uuid())
+  name          String
+  description   String
+  progressNotes ProgressNoteOnSymptom[]
 }
 
-model PatientOnSymptom {
+model ProgressNote {
+  id        String               @id @default(uuid())
+  treatment String
   patientId String
-  symptomId String
-  Patient   Patient @relation(fields: [patientId], references: [id])
-  Symptom   Symptom @relation(fields: [symptomId], references: [id])
-  @@id([patientId, symptomId])
+  Patient   Patient              @relation(fields: [patientId], references: [id])
+  symptoms  ProgressNoteOnSymptom[]
+}
+
+model ProgressNoteOnSymptom {
+  progressNoteId String
+  symptomId      String
+  ProgressNote   ProgressNote @relation(fields: [progressNoteId], references: [id])
+  Symptom        Symptom      @relation(fields: [symptomId], references: [id])
+  @@id([progressNoteId, symptomId])
 }
