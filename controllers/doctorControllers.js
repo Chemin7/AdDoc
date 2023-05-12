@@ -1,5 +1,11 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const PDFDocument = require('pdfkit');
+const fs = require('fs')
+const path = require('path');
+
+
+
 
 exports.getDashboardPage = async (req,res) => {
 
@@ -120,9 +126,78 @@ exports.softDeletePatient = async (req,res) => {
     });
 
     req.flash('success', 'Patient deleted correctly');
-    res.locals.success = req.flash('success');
     res.redirect('doctor/dashboard');
   }catch(err){
     console.log(err)
   }
 }
+
+
+
+
+exports.createPrescription = async (req, res) => {
+  const { patientId } = req.params;
+  const { treatment } = req.body;
+
+  try {
+    // Fetch patient and doctor details
+    const patient = await prisma.patient.findUnique({
+      where: { id: patientId },
+      include: { Doctor: true },
+    });
+
+    if (!patient) {
+      throw new Error('Patient not found');
+    }
+
+    const { name: patientName } = patient;
+    const { name: doctorName, email: doctorEmail } = patient.Doctor;
+
+    // Create a new PDF document
+
+    const doc = new PDFDocument();
+
+    const filename = `${Date.now()}-${patient.id}.pdf`
+
+
+    const dirPath = path.join(__dirname, '..', 'uploads');
+    const filePath = path.join(dirPath, filename);
+    
+    
+     doc
+      .fontSize(18)
+      .text(`Patient Name: ${patientName}`, 100, 100)
+      .text(`Doctor Name: ${doctorName}`, 100, 150)
+      .text(`Doctor Email: ${doctorEmail}`, 100, 200)
+      .text(`Date: ${Date(Date.now()).toString()}`, 100, 250)
+      .text(`Treatment: ${treatment}`, 100, 300);
+
+    doc.pipe(fs.createWriteStream(filePath))
+
+
+    doc.end();
+    
+    req.flash('success', 'Prescription created correctly');
+    res.redirect('/doctors/dashboard');
+    
+  }catch(err){
+    console.log(err)
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

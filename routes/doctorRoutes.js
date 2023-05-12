@@ -12,5 +12,6 @@ doctorRouter.get('/recipe/:id',isAuth, doctorController.getGenerateRecipePage)
 doctorRouter.post('/edit-patient/:id', isAuth, patientRegisterValidator, doctorController.editPatient);
 doctorRouter.post('/register-patient', isAuth,patientRegisterValidator, doctorController.registerPatient);
 doctorRouter.delete('/delete-patient/:id', doctorController.softDeletePatient);
+doctorRouter.post('/recipe/:patientId',doctorController.createPrescription);
 
 module.exports = doctorRouter;
