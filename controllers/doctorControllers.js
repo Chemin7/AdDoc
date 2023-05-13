@@ -137,10 +137,30 @@ exports.softDeletePatient = async (req,res) => {
 
 exports.createPrescription = async (req, res) => {
   const { patientId } = req.params;
-  const { treatment } = req.body;
-
+  const { treatment,symptoms } = req.body;
+  console.log(symptoms)
+  console.log(typeof(symptoms))
   try {
-    // Fetch patient and doctor details
+    //symptoms : progress note
+    const progressNote = await prisma.progressNote.create({
+      data: {
+        treatment,
+        patientId,
+      },
+    });
+
+    for (let i = 0; i < symptoms.length; i++) {
+      await prisma.progressNoteOnSymptom.create({
+        data: {
+          progressNoteId: progressNote.id,
+          symptomId: symptoms[i],
+        },
+      });
+    }
+
+
+    //prescription
+
     const patient = await prisma.patient.findUnique({
       where: { id: patientId },
       include: { Doctor: true },
@@ -157,7 +177,7 @@ exports.createPrescription = async (req, res) => {
 
     const doc = new PDFDocument();
 
-    const filename = `${Date.now()}-${patient.id}.pdf`
+    const filename = `${Date.now()}-${patient.name}.pdf`
 
 
     const dirPath = path.join(__dirname, '..', 'uploads');
