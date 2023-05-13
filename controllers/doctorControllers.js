@@ -47,6 +47,10 @@ exports.getGenerateRecipePage = async (req,res)=>{
     console.log(err);
   }
 }
+
+exports.getPrescriptionRecordPage = async(req,res)=>{
+  res.render('doctor/')
+}
 //API
 exports.registerPatient = async (req, res) => {
   const { name, email, age, gender, address, phoneNumber, religion } = req.body;
@@ -171,16 +175,19 @@ exports.createPrescription = async (req, res) => {
     }
 
     const { name: patientName } = patient;
-    const { name: doctorName, email: doctorEmail } = patient.Doctor;
+    const { name: doctorName, email: doctorEmail ,id:doctorId} = patient.Doctor;
 
     // Create a new PDF document
 
     const doc = new PDFDocument();
 
     const filename = `${Date.now()}-${patient.name}.pdf`
+  
+     const dirPath = path.join(__dirname, '..', 'uploads', patient.doctorId, patient.id);
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
 
-
-    const dirPath = path.join(__dirname, '..', 'uploads');
     const filePath = path.join(dirPath, filename);
     
     
@@ -202,6 +209,21 @@ exports.createPrescription = async (req, res) => {
     
   }catch(err){
     console.log(err)
+  }
+}
+
+exports.getPrescriptionRecord = async (req,res)=>{
+  const {patientId} = req.params
+  try{
+    const prescriptions = await prisma.progressNote.findMany({
+      where:{
+        patientId
+      }
+    })
+
+    res.json(prescriptions);
+  }catch(err){
+    console.log(err);
   }
 }
 

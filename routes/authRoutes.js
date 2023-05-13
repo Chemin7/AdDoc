@@ -1,6 +1,6 @@
 const express = require('express');
 const authRouter = express.Router();
-const { registerDoctor, postLogin, confirmEmail,getLoginPage,getSignUpPage,logOut,getFormForgetPassword,forgotPassword,resetPassword,getCheckToken} = require('../controllers/authControllers');
+const { registerDoctor, postLogin, confirmEmail,getLoginPage,getSignUpPage,logOut,getFormForgetPassword,forgotPassword,resetPassword,getCheckToken,getPrescriptionRecord} = require('../controllers/authControllers');
 const {registerDoctorValidator,checkPassword} = require('../helpers/validators')
 
 authRouter.get('/login',getLoginPage);
@@ -14,5 +14,7 @@ authRouter.get('/confirm/:token', confirmEmail);
 authRouter.get('/logout',logOut)
 authRouter.post('/forgot-password',forgotPassword)
 authRouter.post('/reset-password/:token',checkPassword, resetPassword)
+//authRouter.get('/prescription/:patientId',getPrescriptionRecord)
+
 
 module.exports = authRouter;
