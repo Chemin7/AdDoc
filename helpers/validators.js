@@ -5,10 +5,19 @@ exports.registerDoctorValidator = [
   check('specialty').notEmpty().withMessage('Specialty is required.'),
   check('email').isEmail().withMessage('Must be a valid email.'),
   check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.'),
+  check('repeatPassword').custom((value, { req }) => {
+    if (value !== req.body.password) {
+      throw new Error('Passwords must be equal');
+    }
+    return true;
+  }),
+
+  
   (req, res, next) => {
     const errors = validationResult(req);
-    req.flash('errors', errors.array());
+   
     if (!errors.isEmpty()) {
+      req.flash('errors', errors.array());
       return res.redirect('/sign-up');
     }
     next();
@@ -30,6 +39,22 @@ exports.patientRegisterValidator = [
     if (!errors.isEmpty()) {
       req.flash('errors', errors.array());
       return res.redirect('/doctors/dashboard');
+    }
+    next();
+  },
+];
+
+
+
+exports.checkPassword = [
+  check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.'),
+  
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      req.flash('errors', errors.array());
+      return res.redirect(`/reset-password/${req.params.token}`);
     }
     next();
   },

@@ -1,0 +1,4 @@
+if errors
+    div(class="max-w-md mx-auto my-10")
+        each error in errors
+            p(class="bg-red-600 text-white uppercase text-xs text-center p-2 mb-1 font-bold rounded-lg")= error.msg
