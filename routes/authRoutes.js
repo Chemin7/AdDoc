@@ -14,7 +14,7 @@ authRouter.get('/confirm/:token', confirmEmail);
 authRouter.get('/logout',logOut)
 authRouter.post('/forgot-password',forgotPassword)
 authRouter.post('/reset-password/:token',checkPassword, resetPassword)
-//authRouter.get('/prescription/:patientId',getPrescriptionRecord)
+
 
 
 module.exports = authRouter;

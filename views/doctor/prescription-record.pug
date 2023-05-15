@@ -1,0 +1,13 @@
+extends ../layouts/layoutIn
+block contenido
+
+    .py-5 
+        h1.text-4xl.my-5.text-center.font-extrabold Ad
+            span.text-blue-600 Doc
+        h2.text-center.text-2xl.font-extrabold.mb-9= pagina
+
+
+    each progressNoteId in progressNotesIds
+        a(href=`/doctors/prescription/${patientId}/${progressNoteId.id}` target="_blank") pdf
+
+            

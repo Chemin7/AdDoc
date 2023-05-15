@@ -49,7 +49,24 @@ exports.getGenerateRecipePage = async (req,res)=>{
 }
 
 exports.getPrescriptionRecordPage = async(req,res)=>{
-  res.render('doctor/')
+  const {patientId} = req.params
+  console.log(patientId)
+  try{
+    const progressNotesIds = await prisma.progressNote.findMany({
+      where:{
+        patientId
+      },
+      select:{
+        id:true
+      }
+    })
+    console.log(progressNotesIds)
+    res.render('doctor/prescription-record',{progressNotesIds,patientId})
+  }catch(err){
+    console.log(err)
+  }
+
+ 
 }
 //API
 exports.registerPatient = async (req, res) => {
@@ -145,23 +162,7 @@ exports.createPrescription = async (req, res) => {
   console.log(symptoms)
   console.log(typeof(symptoms))
   try {
-    //symptoms : progress note
-    const progressNote = await prisma.progressNote.create({
-      data: {
-        treatment,
-        patientId,
-      },
-    });
-
-    for (let i = 0; i < symptoms.length; i++) {
-      await prisma.progressNoteOnSymptom.create({
-        data: {
-          progressNoteId: progressNote.id,
-          symptomId: symptoms[i],
-        },
-      });
-    }
-
+    
 
     //prescription
 
@@ -181,14 +182,14 @@ exports.createPrescription = async (req, res) => {
 
     const doc = new PDFDocument();
 
-    const filename = `${Date.now()}-${patient.name}.pdf`
+    const fileName = `${Date.now()}-${patient.name}.pdf`
   
      const dirPath = path.join(__dirname, '..', 'uploads', patient.doctorId, patient.id);
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
     }
 
-    const filePath = path.join(dirPath, filename);
+    const filePath = path.join(dirPath, fileName);
     
     
      doc
@@ -203,6 +204,25 @@ exports.createPrescription = async (req, res) => {
 
 
     doc.end();
+
+    //symptoms : progress note
+    const progressNote = await prisma.progressNote.create({
+      data: {
+        treatment,
+        patientId,
+        fileName
+      },
+    });
+
+    for (let i = 0; i < symptoms.length; i++) {
+      await prisma.progressNoteOnSymptom.create({
+        data: {
+          progressNoteId: progressNote.id,
+          symptomId: symptoms[i],
+        },
+      });
+    }
+
     
     req.flash('success', 'Prescription created correctly');
     res.redirect('/doctors/dashboard');
@@ -211,7 +231,7 @@ exports.createPrescription = async (req, res) => {
     console.log(err)
   }
 }
-
+/*
 exports.getPrescriptionRecord = async (req,res)=>{
   const {patientId} = req.params
   try{
@@ -226,8 +246,36 @@ exports.getPrescriptionRecord = async (req,res)=>{
     console.log(err);
   }
 }
+*/
+exports.getPatientPrescription = async (req, res, next) => {
+  try {
+    const {progressNoteId,patientId} = req.params;
+    const {fileName} = await prisma.progressNote.findUnique({
+      where:{
+       id:progressNoteId 
+      },
+      select:{
+        fileName:true,
+      }
+    })
 
+    console.log(`
+      req.user.id = ${req.user.id} \n
+      patientId =${patientId} \n
+      filename = ${fileName}
+    `)
+    const filePath = path.join(__dirname, '..', 'uploads',req.user.id, patientId, fileName); 
 
+    if (fs.existsSync(filePath)) {
+      res.sendFile(filePath);
+    } else {
+      res.status(404).send('Prescription not found');
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error in obtaining patient's prescription");
+  }
+};
 
 
 

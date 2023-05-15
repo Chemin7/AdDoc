@@ -77,13 +77,14 @@ block contenido
                             button(class="edit bg-blue-500 py-1 px-4 mt-2 rounded-xl text-center text-white font-bold " data-patient-id=patient.id ) Edit
                             button(class="delete bg-red-500 py-1 px-4 mt-2 rounded-xl text-center text-white font-bold mx-5" data-patient-id=patient.id  ) Delete
                             button(class="generate bg-green-500 py-1 px-4 mt-2 rounded-xl text-center text-white font-bold " data-patient-id=patient.id ) Generate recipe
-    
+                            button(class="record bg-yellow-500 py-1 px-4 mt-2 rounded-xl text-center text-white font-bold " data-patient-id=patient.id ) View Record
     script.
         
             // Get all the edit and delete buttons on the page
             let editButtons = document.querySelectorAll('.edit');
             let deleteButtons = document.querySelectorAll('.delete');
             let generateRecipeButtons = document.querySelectorAll('.generate');
+            let recordButtons = document.querySelectorAll('.record')
 
             // Attach click event listener to each edit button
             editButtons.forEach((button) => {
@@ -93,6 +94,16 @@ block contenido
 
                     
                     window.location.href = `/doctors/edit-patient/${patientId}`;
+                });
+            });
+
+            recordButtons.forEach((button) => {
+                button.addEventListener('click', function() {
+                    // Extract patient id from the button's data attribute
+                    let patientId = this.dataset.patientId;
+
+                    
+                    window.location.href = `/doctors/record/${patientId}`;
                 });
             });
 

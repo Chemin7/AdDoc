@@ -609,6 +609,10 @@ video {
   margin-bottom: 2.25rem;
 }
 
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
 .mt-10 {
   margin-top: 2.5rem;
 }
@@ -631,6 +635,10 @@ video {
 
 .flex {
   display: flex;
+}
+
+.hidden {
+  display: none;
 }
 
 .min-h-screen {
@@ -752,6 +760,11 @@ video {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-yellow-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(234 179 8 / var(--tw-bg-opacity));
 }
 
 .p-2 {

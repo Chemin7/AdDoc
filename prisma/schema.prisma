@@ -47,6 +47,7 @@ model ProgressNote {
   id        String               @id @default(uuid())
   treatment String
   patientId String
+  fileName  String
   Patient   Patient              @relation(fields: [patientId], references: [id])
   symptoms  ProgressNoteOnSymptom[]
 }

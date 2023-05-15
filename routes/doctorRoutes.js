@@ -8,10 +8,11 @@ const doctorRouter = express.Router();
 doctorRouter.get('/dashboard', isAuth, doctorController.getDashboardPage);
 doctorRouter.get('/edit-patient/:id', isAuth, doctorController.getEditPatientPage);
 doctorRouter.get('/recipe/:id',isAuth, doctorController.getGenerateRecipePage)
+doctorRouter.get('/record/:patientId',isAuth,doctorController.getPrescriptionRecordPage)
 //API
 doctorRouter.post('/edit-patient/:id', isAuth, patientRegisterValidator, doctorController.editPatient);
 doctorRouter.post('/register-patient', isAuth,patientRegisterValidator, doctorController.registerPatient);
 doctorRouter.delete('/delete-patient/:id', doctorController.softDeletePatient);
 doctorRouter.post('/recipe/:patientId',doctorController.createPrescription);
-
+doctorRouter.get('/prescription/:patientId/:progressNoteId',doctorController.getPatientPrescription)
 module.exports = doctorRouter;
