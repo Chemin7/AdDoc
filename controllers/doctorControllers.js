@@ -3,6 +3,7 @@ const prisma = new PrismaClient();
 const PDFDocument = require('pdfkit');
 const fs = require('fs')
 const path = require('path');
+const { type } = require('os');
 
 
 
@@ -52,16 +53,27 @@ exports.getPrescriptionRecordPage = async(req,res)=>{
   const {patientId} = req.params
   console.log(patientId)
   try{
-    const progressNotesIds = await prisma.progressNote.findMany({
+    const {name} = await prisma.patient.findUnique({
+      where:{
+        id:patientId
+      },
+      select:{
+        name:true
+      }
+    })
+    const progressNotes = await prisma.progressNote.findMany({
       where:{
         patientId
       },
       select:{
-        id:true
-      }
+        id:true,
+        date:true,
+      },
+     
+      
     })
-    console.log(progressNotesIds)
-    res.render('doctor/prescription-record',{progressNotesIds,patientId})
+
+    res.render('doctor/prescription-record',{progressNotes,patientId,name})
   }catch(err){
     console.log(err)
   }
@@ -191,13 +203,19 @@ exports.createPrescription = async (req, res) => {
 
     const filePath = path.join(dirPath, fileName);
     
-    
+    const date = new Date(Date.now())
+    const dateString = Date.now().toString()
+    const dateOtra = new Date(date.getFullYear(), date.getMonth(),date.getDay())
+
+    console.log(date)
+    console.log(dateString)
+    console.log(dateOtra)
      doc
       .fontSize(18)
       .text(`Patient Name: ${patientName}`, 100, 100)
       .text(`Doctor Name: ${doctorName}`, 100, 150)
       .text(`Doctor Email: ${doctorEmail}`, 100, 200)
-      .text(`Date: ${Date(Date.now()).toString()}`, 100, 250)
+      .text(`Date: ${dateString}`, 100, 250)
       .text(`Treatment: ${treatment}`, 100, 300);
 
     doc.pipe(fs.createWriteStream(filePath))
@@ -206,11 +224,14 @@ exports.createPrescription = async (req, res) => {
     doc.end();
 
     //symptoms : progress note
+    console.log(typeof(date) , " date")
+    console.log(typeof(Date(date)), " Date(date)")
     const progressNote = await prisma.progressNote.create({
       data: {
         treatment,
         patientId,
-        fileName
+        fileName,
+        date,
       },
     });
 

@@ -6,8 +6,22 @@ block contenido
             span.text-blue-600 Doc
         h2.text-center.text-2xl.font-extrabold.mb-9= pagina
 
+    
+    div(class="flex flex-wrap mt-3")
+        div(class="md:w-1/2 sm:w-full m-auto ")
 
-    each progressNoteId in progressNotesIds
-        a(href=`/doctors/prescription/${patientId}/${progressNoteId.id}` target="_blank") pdf
+            if progressNotes.length > 0
+                h2(class="text-4xl text-center font-extrabold uppercase mb-5")= name
+                each progressNote in progressNotes
+                    div(class="flex justify-evenly items-start bg-white border border-gray-300 rounded shadow-md mx-5 px-5 mb-5 max-w-sm py-3 text-center")
+                        p.font-bold.text-xl.text-center= progressNote.date.toLocaleString()
+                        a(href=`/doctors/prescription/${patientId}/${progressNote.id}` target="_blank") 
+                            i(class="fa fa-solid fa-file-pdf fa-xl mx-3" style="color: black;") 
+                            
+                        a(href=`/doctors/prescription/${patientId}/${progressNote.id}` target="_blank") 
+                            i(class="fa fa-solid fa-trash fa-xl mx-3" style="color: red;")
+            else  
+                h2(class="font-extrabold text-2xl text-center mb-3") Start adding   
+                    span(class="text-blue-600   ") Prescription for this patient
 
             
