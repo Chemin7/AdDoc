@@ -2,24 +2,32 @@ extends ../layouts/layoutIn
 block contenido
 
     .py-5 
-        h1.text-4xl.my-5.text-center.font-extrabold Ad
+        h1.text-4xl.my-2.text-center.font-extrabold Ad
             span.text-blue-600 Doc
         h2.text-center.text-2xl.font-extrabold.mb-9= pagina
 
     
-    div(class="flex flex-wrap mt-3")
-        div(class="md:w-1/2 sm:w-full m-auto ")
+    div(class="flex flex-wrap mt-2")
+        div(class="md:w-full sm:w-full m-auto  flex flex-col justify-center items-center ")
+            div#success
+            if success.length > 0
+                div(class="max-w-md mx-auto my-10")
+                    p(class="bg-green-600 text-white uppercase text-xs text-center p-2 mb-1 font-bold rounded-lg")= success
 
             if progressNotes.length > 0
-                h2(class="text-4xl text-center font-extrabold uppercase mb-5")= name
+                h2(class="text-4xl text-center font-extrabold uppercase mb-5 mx-auto")= name
                 each progressNote in progressNotes
                     div(class="flex justify-evenly items-start bg-white border border-gray-300 rounded shadow-md mx-5 px-5 mb-5 max-w-sm py-3 text-center")
                         p.font-bold.text-xl.text-center= progressNote.date.toLocaleString()
                         a(href=`/doctors/prescription/${patientId}/${progressNote.id}` target="_blank") 
                             i(class="fa fa-solid fa-file-pdf fa-xl mx-3" style="color: black;") 
                             
-                        a(href=`/doctors/prescription/${patientId}/${progressNote.id}` target="_blank") 
+                        //-form(action=`/doctors/prescription/${patientId}/${progressNote.id}`, method="post") 
+                            input(type="button", value="")
+                            
+                        a(href=`/doctors/delete-prescription/${patientId}/${progressNote.id}`) 
                             i(class="fa fa-solid fa-trash fa-xl mx-3" style="color: red;")
+                           
             else  
                 h2(class="font-extrabold text-2xl text-center mb-3") Start adding   
                     span(class="text-blue-600   ") Prescription for this patient

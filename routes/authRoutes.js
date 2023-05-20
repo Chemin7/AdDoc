@@ -1,7 +1,7 @@
 const express = require('express');
 const authRouter = express.Router();
 const { registerDoctor, postLogin, confirmEmail,getLoginPage,getSignUpPage,logOut,getFormForgetPassword,forgotPassword,resetPassword,getCheckToken,getPrescriptionRecord} = require('../controllers/authControllers');
-const {registerDoctorValidator,checkPassword} = require('../helpers/validators')
+const {registerDoctorValidator,checkPassword,checkEmail} = require('../helpers/validators')
 
 authRouter.get('/login',getLoginPage);
 authRouter.get('/sign-up',getSignUpPage);
@@ -12,7 +12,7 @@ authRouter.post('/sign-up',registerDoctorValidator, registerDoctor);
 authRouter.post('/login', postLogin);
 authRouter.get('/confirm/:token', confirmEmail);
 authRouter.get('/logout',logOut)
-authRouter.post('/forgot-password',forgotPassword)
+authRouter.post('/forgot-password',checkEmail,forgotPassword)
 authRouter.post('/reset-password/:token',checkPassword, resetPassword)
 
 

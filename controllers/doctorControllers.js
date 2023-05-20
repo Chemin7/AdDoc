@@ -11,24 +11,24 @@ const { type } = require('os');
 exports.getDashboardPage = async (req,res) => {
 
   let doctorId = req.user.id;
-
+  const formData = req.flash('formData')[0];
   let patients = await prisma.patient.findMany({ where: 
     { doctorId ,
       deleted:false
     } 
   });
 
-  res.render('doctor/dashboard', { patients });
+  res.render('doctor/dashboard', { patients,formData });
 };
 
 
 exports.getEditPatientPage = async (req,res) =>{
   try{
-    const patient = await prisma.patient.findUnique(
+    const formData = await prisma.patient.findUnique(
       {
         where:{id:req.params.id}
       })
-    res.render('doctor/edit-patient',{patient})
+    res.render('doctor/edit-patient',{formData})
   }catch(err){
     console.log(err)
   }
@@ -295,6 +295,48 @@ exports.getPatientPrescription = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     res.status(500).send("Error in obtaining patient's prescription");
+  }
+};
+
+exports.deletePatientPrescription = async (req, res) => {
+  try {
+    const { progressNoteId, patientId } = req.params;
+
+    // Fetch the progress note and its file name
+    const progressNote = await prisma.progressNote.findUnique({
+      where: {
+        id: progressNoteId,
+      },
+      select: {
+        fileName: true,
+      },
+    });
+
+    // Delete the progress note symptom associations
+    await prisma.progressNoteOnSymptom.deleteMany({
+      where: {
+        progressNoteId,
+      },
+    });
+
+    // Delete the progress note
+    await prisma.progressNote.delete({
+      where: {
+        id: progressNoteId,
+      },
+    });
+
+    // Delete the file
+    const filePath = path.join(__dirname, '..', 'uploads', req.user.id, patientId, progressNote.fileName);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+
+    req.flash('success', 'Prescription deleted correctly');
+    res.redirect(`/doctors/record/${patientId}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in deleting the prescription');
   }
 };
 

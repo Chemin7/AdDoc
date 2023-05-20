@@ -28,6 +28,9 @@ app.use((req, res, next) => {
   res.locals.error = req.flash('error');
   res.locals.errors = req.flash('errors');
   res.locals.success = req.flash('success');
+  if(req.session.flash.formData){
+    res.locals.formData = req.session.flash.formData[0]; // without removing the data
+  }
   next();
 });
 
